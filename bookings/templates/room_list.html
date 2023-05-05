@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Rooms</h1>
+    <ul>
+        {% for room in rooms %}
+            <li>{{ room }}</li>
+        {% endfor %}
+    </ul>
+    {% extends 'base.html' %}
+
+    {% block content %}
+        <!-- {% for room in object_list %}
+            <div class="card mb-4">
+                <div class="card-header">{{ room.name }}</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ room.description }}</h5>
+                    <p class="card-text">${{ room.price }} per night</p>
+                    <a href="{% url 'booking_create' %}?room={{ room.id }}" class="btn btn-primary">Book Now</a>
+                </div>
+            </div>
+        {% empty %}
+            <p>No rooms available.</p>
+        {% endfor %}
+    {% endblock %}
+     -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Available Rooms</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Room Number</th>
+        <th>Room Type</th>
+        <th>Price</th>
+        <th>Availability</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for room in rooms %}
+        <tr>
+          <td>{{ room.room_number }}</td>
+          <td>{{ room.room_type }}</td>
+          <td>{{ room.price }}</td>
+          <td>{{ room.get_availability_display }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="4">No rooms found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
