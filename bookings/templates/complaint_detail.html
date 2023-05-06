@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Complaint detail</h1>
+  <table>
+    <tr>
+      <td>ID:</td>
+      <td>{{ complaint.id }}</td>
+    </tr>
+    <tr>
+      <td>Customer:</td>
+      <td>{{ complaint.customer }}</td>
+    </tr>
+    <tr>
+      <td>Date:</td>
+      <td>{{ complaint.date }}</td>
+    </tr>
+    <tr>
+      <td>Status:</td>
+      <td>{{ complaint.status }}</td>
+    </tr>
+    <tr>
+      <td>Message:</td>
+      <td>{{ complaint.message }}</td>
+    </tr>
+  </table>
+{% endblock %}

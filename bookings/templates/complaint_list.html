@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Complaints</h1>
+  {% if user.is_staff %}
+    <p><a href="{% url 'complaint_create' %}">Create a new complaint</a></p>
+  {% endif %}
+  <table>
+    <thead>
+      <tr>
+        <th>Complaint ID</th>
+        <th>Customer</th>
+        <th>Subject</th>
+        <th>Status</th>
+        <th>Date filed</th>
+        {% if user.is_staff %}
+          <th>Actions</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for complaint in complaints %}
+        <tr>
+          <td>{{ complaint.pk }}</td>
+          <td>{{ complaint.customer }}</td>
+          <td>{{ complaint.subject }}</td>
+          <td>{{ complaint.status }}</td>
+          <td>{{ complaint.date_created }}</td>
+          {% if user.is_staff %}
+            <td><a href="{% url 'complaint_solve' complaint.pk %}">Solve</a></td>
+          {% endif %}
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="{% if user.is_staff %}6{% else %}5{% endif %}">No complaints found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

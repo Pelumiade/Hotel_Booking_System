@@ -24,7 +24,7 @@
         {% endfor %}
     {% endblock %}
      -->
-{% extends 'base.html' %}
+<!-- {% extends 'base.html' %}
 
 {% block content %}
   <h1>Available Rooms</h1>
@@ -52,4 +52,53 @@
       {% endfor %}
     </tbody>
   </table>
+{% endblock %} -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Rooms</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Room number</th>
+        <th>Type</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Photo</th>
+        {% if user.is_staff %}
+          <th>Action</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for room in rooms %}
+        <tr>
+          <td>{{ room.room_number }}</td>
+          <td>{{ room.room_type }}</td>
+          <td>{{ room.price }}</td>
+          <td>{{ room.description }}</td>
+          <td>
+            {% if room.photo %}
+              <img src="{{ room.photo.url }}" alt="{{ room.room_number }}" width="100">
+            {% else %}
+              No photo
+            {% endif %}
+          </td>
+          {% if user.is_staff %}
+            <td>
+              <a href="{% url 'room_update' room.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+            </td>
+          {% endif %}
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">No rooms found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if user.is_staff %}
+    <a href="{% url 'room_create' %}" class="btn btn-primary">Add Room</a>
+  {% endif %}
 {% endblock %}
