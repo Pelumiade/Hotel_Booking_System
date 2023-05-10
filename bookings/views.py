@@ -23,6 +23,7 @@ from django.views.generic import ListView
 User = get_user_model()
 # Create your views here.
 
+<<<<<<< HEAD
 
 def home_page(request):
     rooms = Room.objects.all()
@@ -30,6 +31,8 @@ def home_page(request):
     return render(request, 'home_page.html', context)
 
 
+=======
+>>>>>>> 3a20cca7aad771542694611f128820f86451f648
 @login_required
 def home(request):
     upcoming_bookings = Booking.objects.filter(user=request.user)
@@ -99,6 +102,7 @@ def booking_create(request, id):
         form = BookingForm()
     return render(request, 'book_room.html', {'room': room, 'form': form})
 
+<<<<<<< HEAD
 # @login_required
 # def complaint_create(request, id):
 #     complaint = get_object_or_404(Booking, id=id)
@@ -114,6 +118,19 @@ def booking_create(request, id):
 #     else:
 #         form = ComplaintForm  # pass booking object as parameter
 #     return render(request, 'complaint_create.html', {'form': form})
+=======
+@login_required
+def booking_create(request, pk):
+    room = get_object_or_404(Room, pk=pk)
+    form = BookingForm(request.POST or None)
+    if form.is_valid():
+        booking = form.save(commit=False)
+        booking.room = room
+        booking.save()
+        return redirect('home')
+    return render(request, 'bookings/booking_create.html', {'form': form, 'room': room})
+
+>>>>>>> 3a20cca7aad771542694611f128820f86451f648
 
 @login_required
 def complaint_create(request, id):
@@ -202,6 +219,12 @@ def booking_update(request, pk):
     
     return render(request, 'booking_update.html', {'form': form, 'booking': booking})
 
+<<<<<<< HEAD
+=======
+def booking_detail(request, booking_id):
+    booking = get_object_or_404(Booking, pk=booking_id, customer=request.user)
+    return render(request, 'booking_detail.html', {'booking': booking})
+>>>>>>> 3a20cca7aad771542694611f128820f86451f648
 
 @login_required
 def booking_detail(request):
@@ -211,6 +234,10 @@ def booking_detail(request):
 
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3a20cca7aad771542694611f128820f86451f648
 @login_required
 def complaint_update(request, pk):
     complaint = get_object_or_404(Complaint, pk=pk)
