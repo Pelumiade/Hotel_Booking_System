@@ -24,6 +24,7 @@ User = get_user_model()
 # Create your views here.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 def home_page(request):
     rooms = Room.objects.all()
@@ -31,6 +32,8 @@ def home_page(request):
     return render(request, 'home_page.html', context)
 
 
+=======
+>>>>>>> 3a20cca7aad771542694611f128820f86451f648
 =======
 >>>>>>> 3a20cca7aad771542694611f128820f86451f648
 @login_required
@@ -52,6 +55,7 @@ def room_list(request):
 def admin_room_list(request):
     rooms = Room.objects.all()
 
+<<<<<<< HEAD
     if request.method == 'POST':
         if 'create' in request.POST:
             form = RoomForm(request.POST, request.FILES)
@@ -119,6 +123,8 @@ def booking_create(request, id):
 #         form = ComplaintForm  # pass booking object as parameter
 #     return render(request, 'complaint_create.html', {'form': form})
 =======
+=======
+>>>>>>> 3a20cca7aad771542694611f128820f86451f648
 @login_required
 def booking_create(request, pk):
     room = get_object_or_404(Room, pk=pk)
@@ -224,6 +230,7 @@ def booking_update(request, pk):
 def booking_detail(request, booking_id):
     booking = get_object_or_404(Booking, pk=booking_id, customer=request.user)
     return render(request, 'booking_detail.html', {'booking': booking})
+<<<<<<< HEAD
 >>>>>>> 3a20cca7aad771542694611f128820f86451f648
 
 @login_required
@@ -236,6 +243,39 @@ def booking_detail(request):
 
 <<<<<<< HEAD
 =======
+
+>>>>>>> 3a20cca7aad771542694611f128820f86451f648
+=======
+
+@login_required
+def booking_cancel(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    booking.delete()
+    messages.success(request, 'Booking cancelled successfully.')
+    return redirect('booking_list')
+
+@login_required
+def complaint_create(request):
+    if request.method == 'POST':
+        form = ComplaintForm(request.POST)
+        if form.is_valid():
+            complaint = form.save(commit=False)
+            complaint.customer = request.user
+            complaint.save()
+            messages.success(request, 'Your complaint has been submitted.')
+            return redirect('complaint_list')
+            #return redirect('customer:complaint_detail', complaint_id=complaint.id)
+    else:
+        form = ComplaintForm()
+    return render(request, 'complaint_create.html', {'form': form})
+
+@login_required
+def complaint_list(request, complaint_id):
+    complaint = get_object_or_404(Complaint, pk=complaint_id, customer=request.user)
+    return render(request, 'complaint_list.html', {'complaint': complaint})
+
+
+
 
 >>>>>>> 3a20cca7aad771542694611f128820f86451f648
 @login_required
