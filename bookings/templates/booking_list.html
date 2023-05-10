@@ -1,47 +1,17 @@
-<!-- {% extends 'base.html' %}
-
-{% block content %}
-  <h1>My Bookings</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Room number</th>
-        <th>Check-in date</th>
-        <th>Check-out date</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for booking in bookings %}
-        <tr>
-          <td>{{ booking.room.room_number }}</td>
-          <td>{{ booking.check_in_date }}</td>
-          <td>{{ booking.check_out_date }}</td>
-          <td>{{ booking.status }}</td>
-        </tr>
-      {% empty %}
-        <tr>
-          <td colspan="4">No bookings yet.</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-{% endblock %} -->
 {% extends 'base.html' %}
 
 {% block content %}
   <h1>Booking List</h1>
-  {% if bookings %}
-    <ul>
-      {% for booking in bookings %}
-        <li>
-          <a href="{% url 'booking_detail' pk=booking.pk %}">
-            Booking #{{ booking.pk }} - {{ booking.room.name }} ({{ booking.check_in_date|date }} to {{ booking.check_out_date|date }})
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>No bookings found.</p>
-  {% endif %}
+
+  {% for booking in bookings %}
+    {{ booking.room.name }} - {{ booking.user.email }} - {{ booking.status }}
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_hidden }}
+        <input type="hidden" name="booking_id" value="{{ booking.id }}">
+        <input type="submit" value="Accept" name="accept">
+        <input type="submit" value="Reject" name="reject">
+    </form>
+{% endfor %}
+
 {% endblock %}

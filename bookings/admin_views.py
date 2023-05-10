@@ -46,18 +46,18 @@ def admin_booking_list(request):
     past_bookings = Booking.objects.filter(status='past')
     return render(request, 'admin_booking_list.html', {'current_bookings': current_bookings, 'past_bookings': past_bookings})
 
-@login_required
-def booking_accept(request, pk):
-    booking = get_object_or_404(Booking, pk=pk)
-    booking.status = 'accepted'
-    booking.save()
-    send_mail(
-        'Your booking has been accepted',
-        'Dear {0}, your booking for room {1} has been accepted.'.format(booking.customer.username, booking.room.room_number),
-        'admin@example.com',
-        [booking.customer.email],
-        fail_silently=False,
-    )
+# @login_required
+# def booking_accept(request, pk):
+#     booking = get_object_or_404(Booking, pk=pk)
+#     booking.status = 'accepted'
+#     booking.save()
+#     send_mail(
+#         'Your booking has been accepted',
+#         'Dear {0}, your booking for room {1} has been accepted.'.format(booking.customer.username, booking.room.room_number),
+#         'admin@example.com',
+#         [booking.customer.email],
+#         fail_silently=False,
+#     )
     messages.success(request, 'Booking accepted and email sent.')
     return redirect('admin_booking_list')
 
@@ -106,17 +106,6 @@ def complaint_detail(request, pk):
     complaint = get_object_or_404(Complaint, pk=pk)
     return render(request, 'complaint_detail.html', {'complaint': complaint})
 
-# @login_required
-# def complaint_resolve(request, pk):
-#     complaint = get_object_or_404(Complaint, pk=pk)
-#     if request.method == 'POST':
-#         form = ComplaintForm(request.POST, instance=complaint)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('complaint_list')
-#     else:
-#         form = ComplaintForm(instance=complaint)
-#     return render(request, 'complaint_resolve.html', {'form': form})
 
 @login_required
 def complaint_solve(request, pk):

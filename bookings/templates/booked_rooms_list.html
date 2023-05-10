@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Current Bookings</h1>
+{% if current_bookings %}
+<ul>
+{% for booking in current_bookings %}
+    <li>{{ booking.room.name }} - {{ booking.user.first_name }} 
+        {{ booking.user.last_name }} - {{ booking.user.email }} - {{ booking.check_in|date:"M d, Y" }} to {{ booking.check_out|date:"M d, Y" }}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>No current bookings.</p>
+{% endif %}
+<h1>Past Bookings</h1>
+{% if past_bookings %}
+<ul>
+{% for booking in past_bookings %}
+    <li>{{ booking.room.name }} - {{ booking.user.first_name }} {{ booking.user.last_name }} - {{ booking.user.email }} - {{ booking.check_in|date:"M d, Y" }} to {{ booking.check_out|date:"M d, Y" }}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>No past bookings.</p>
+{% endif %}
+{% endblock %}

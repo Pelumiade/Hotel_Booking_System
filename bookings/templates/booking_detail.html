@@ -1,29 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Booking detail</h1>
-  <table>
-    <tbody>
-      <tr>
-        <th>Room number:</th>
-        <td>{{ booking.room.room_number }}</td>
-      </tr>
-      <tr>
-        <th>Customer:</th>
-        <td>{{ booking.customer }}</td>
-      </tr>
-      <tr>
-        <th>Check-in date:</th>
-        <td>{{ booking.check_in_date }}</td>
-      </tr>
-      <tr>
-        <th>Check-out date:</th>
-        <td>{{ booking.check_out_date }}</td>
-      </tr>
-      <tr>
-        <th>Status:</th>
-        <td>{{ booking.status }}</td>
-      </tr>
-    </tbody>
-  </table>
+
+ {% for booking in bookings %}
+
+  Room name: <h1>{{booking.room.name}}</h1>
+  Room type: <h1>{{booking.room.room_type}}</h1>
+  <h1>{{booking.check_in}}</h1>
+  <h1>{{booking.status}}</h1>
+ {% endfor %}
+ 
 {% endblock %}
+
+
+

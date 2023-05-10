@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Rooms</h1>
+  <hr>
+  {% if rooms %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Number</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Image</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for room in rooms %}
+          <tr>
+            <td>{{ room.id }}</td>
+            <td>{{ room.name }}</td>
+            <td>{{ room.room_type }}</td>
+            <td>{{ room.room_number }}</td>
+            <td>{{ room.description }}</td>
+            <td>{{ room.price }}</td>
+            <td>
+              {% if room.image %}
+                <img src="{{ room.image.url }}" alt="{{ room.name }}" width="50">
+              {% endif %}
+            </td>
+            <td>
+              <form method="POST" action="{% url 'bookings:admin_room_list' %}">
+                {% csrf_token %}
+                <input type="hidden" name="room_id" value="{{ room.id }}">
+                <button type="submit" name="delete" class="btn btn-danger btn-sm">Delete</button>
+                <button type="submit" name="update" class="btn btn-primary btn-sm">Update</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No rooms available.</p>
+  {% endif %}
+   
+  <hr>
+
+  <h2>Create Room</h2>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" name="name" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="room_type">Type</label>
+      <select name="room_type" class="form-control" required>
+        <option value="standard">Standard</option>
+        <option value="deluxe">Deluxe</option>
+        <option value="suite">Suite</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="room_number">Number</label>
+      <input type="number" name="room_number" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea name="description" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="price">Price</label>
+      <input type="number" name="price" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="image">Image</label>
+      <input type="file" name="image" class="form-control-file">
+    </div>
+    <button type="submit" name="create" class="btn btn-primary">Create</button>
+  </form>
+{% endblock %}

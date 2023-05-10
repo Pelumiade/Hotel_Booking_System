@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <h1>Submit Complaint</h1>
-        <form method="post">
-          {% csrf_token %}
-          {{ form.as_p }}
-          <button type="submit" class="btn btn-primary mt-3">Submit</button>
-        </form>
-      </div>
-    </div>
-  </div>
+  <h1>Your Complaint</h1>
+
+  {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+  <form method="post" action="{% url 'bookings:complaint_create' %}?booking_id={{ booking.id }}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
 {% endblock %}

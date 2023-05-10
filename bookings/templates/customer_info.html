@@ -1,0 +1,15 @@
+<!-- customer_info.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Customer Information</h1>
+{% if bookings %}
+<ul>
+{% for booking in bookings %}
+    <li>{{ booking.user.email }} - {{ booking.number_of_guests }} guests - {{ booking.check_in|date:"M d, Y" }} to {{ booking.check_out|date:"M d, Y" }}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>No bookings.</p>
+{% endif %}
+{% endblock %}

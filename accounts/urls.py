@@ -2,11 +2,15 @@
 
 from django.urls import path
 from . import views
+app_name='accounts'
 
 urlpatterns = [
-    path('login/', views.login_view, name='login'),
+    path('login/', views.admin_dashboard, name='login'),
     path('logout/', views.logout_view, name='logout'),
-    # path('dashboard/', views.dashboard_view, name='dashboard'),
-    # path('bookings/', views.bookings_view, name='bookings'),
-    #path('bookings/<int:booking_id>/', views.booking_details_view, name)
+    path("sign_up/", views.customer_signup, name="customer_signup"),
+    path("customer_login/", views.customer_login, name="customer_login"),
+    #path("customer_logout/", views.customer_logout, name="customer_logout"),
+    
+    path('admin/dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    
 ]

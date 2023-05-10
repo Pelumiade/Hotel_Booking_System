@@ -1,35 +1,43 @@
-<!-- {% extends 'base.html' %}
-
-{% block content %}
-    <h1>Book Room {{ room.room_number }}</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Book Now</button>
-    </form>
-{% endblock %} -->
-{% block title %}{{ title }}{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %}{% block content %}
   <h2>{{ title }}</h2>
-  <form method="POST">
+  <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <div class="form-group">
+    {{form.as_p}}
+    <td><button type="submit">Create</button></td>
+
+
+    <!-- <div class="form-group">
       <label for="room">Room</label>
-      <select class="form-control" id="room" name="room">
+      <select class="form-control" id="room" name="room" required>
         {% for room in rooms %}
           <option value="{{ room.id }}">{{ room.name }}</option>
         {% endfor %}
       </select>
-    </div>
-    <div class="form-group">
+    </div> -->
+    <!-- <div class="form-group">
       <label for="check_in">Check-in Date</label>
-      <input type="date" class="form-control" id="check_in" name="check_in">
+      <input type="date" class="form-control" id="check_in" name="check_in" required>
     </div>
     <div class="form-group">
       <label for="check_out">Check-out Date</label>
-      <input type="date" class="form-control" id="check_out" name="check_out">
+      <input type="date" class="form-control" id="check_out" name="check_out" required>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="form-group">
+      <label for="guest_name">Guest Name</label>
+      <input type="text" class="form-control" id="guest_name" name="guest_name" required>
+    </div>
+    <div class="form-group">
+      <label for="number_of_guests">Number of Guests</label>
+      <input type="number" class="form-control" id="number_of_guests" name="number_of_guests" required>
+    </div>
+    <div class="form-group">
+      <label for="customer_name">Customer Name</label>
+      <input type="text" class="form-control" id="customer_name" name="customer_name" required>
+    </div>
+    <div class="form-group">
+      <label for="customer_email">Customer Email</label>
+      <input type="email" class="form-control" id="customer_email" name="customer_email" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button> -->
   </form>
 {% endblock %}

@@ -1,14 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Update Complaint #{{ complaint.id }}</h1>
-  {% if complaint.status == 'pending' %}
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Update</button>
-    </form>
-  {% else %}
-    <p>This complaint cannot be updated because its status is {{ complaint.status }}.</p>
-  {% endif %}
+  <h1>Edit Complaint</h1>
+  <hr>
+
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-primary">Update Complaint</button>
+  </form>
 {% endblock %}

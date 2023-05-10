@@ -1,104 +1,14 @@
-{% extends 'base.html' %}
+<!-- room_list.html -->
 
-{% block content %}
-    <h1>Rooms</h1>
-    <ul>
-        {% for room in rooms %}
-            <li>{{ room }}</li>
-        {% endfor %}
-    </ul>
-    {% extends 'base.html' %}
-
-    {% block content %}
-        <!-- {% for room in object_list %}
-            <div class="card mb-4">
-                <div class="card-header">{{ room.name }}</div>
-                <div class="card-body">
-                    <h5 class="card-title">{{ room.description }}</h5>
-                    <p class="card-text">${{ room.price }} per night</p>
-                    <a href="{% url 'booking_create' %}?room={{ room.id }}" class="btn btn-primary">Book Now</a>
-                </div>
-            </div>
-        {% empty %}
-            <p>No rooms available.</p>
-        {% endfor %}
-    {% endblock %}
-     -->
-<!-- {% extends 'base.html' %}
-
-{% block content %}
-  <h1>Available Rooms</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Room Number</th>
-        <th>Room Type</th>
-        <th>Price</th>
-        <th>Availability</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for room in rooms %}
-        <tr>
-          <td>{{ room.room_number }}</td>
-          <td>{{ room.room_type }}</td>
-          <td>{{ room.price }}</td>
-          <td>{{ room.get_availability_display }}</td>
-        </tr>
-      {% empty %}
-        <tr>
-          <td colspan="4">No rooms found.</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-{% endblock %} -->
 {% extends 'base.html' %}
 
 {% block content %}
   <h2>Rooms</h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Room number</th>
-        <th>Type</th>
-        <th>Price</th>
-        <th>Description</th>
-        <th>Photo</th>
-        {% if user.is_staff %}
-          <th>Action</th>
-        {% endif %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for room in rooms %}
-        <tr>
-          <td>{{ room.room_number }}</td>
-          <td>{{ room.room_type }}</td>
-          <td>{{ room.price }}</td>
-          <td>{{ room.description }}</td>
-          <td>
-            {% if room.photo %}
-              <img src="{{ room.photo.url }}" alt="{{ room.room_number }}" width="100">
-            {% else %}
-              No photo
-            {% endif %}
-          </td>
-          {% if user.is_staff %}
-            <td>
-              <a href="{% url 'room_update' room.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
-            </td>
-          {% endif %}
-        </tr>
-      {% empty %}
-        <tr>
-          <td colspan="5">No rooms found.</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
-  {% if user.is_staff %}
-    <a href="{% url 'room_create' %}" class="btn btn-primary">Add Room</a>
-  {% endif %}
+  {% for room in rooms %}
+    <h3><a href="{% url 'bookings:room_detail' room.id %}">{{ room.name }}</a></h3>
+    <p>Type: {{ room.room_type }}</p>
+    <p>Price: {{ room.price }}</p>
+    <p>Availability: {% if room.available %}Available{% else %}Not Available{% endif %}</p>
+    <p><img src="{{ room.image.url }}" alt="{{ room.name }}"></p>
+  {% endfor %}
 {% endblock %}

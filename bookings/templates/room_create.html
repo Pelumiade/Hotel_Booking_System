@@ -2,9 +2,11 @@
 
 {% block content %}
   <h1>Create new room</h1>
-  <form method="post">
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <table>
+        {{form.as_p}}
+        <td><button type="submit">Create</button></td>
+    <!-- <table>
       <tr>
         <td><label for="room_number">Room number:</label></td>
         <td><input type="number" id="room_number" name="room_number" required></td>
@@ -31,8 +33,8 @@
       </tr>
       <tr>
         <td></td>
-        <td><button type="submit">Create</button></td>
+        
       </tr>
-    </table>
+    </table> -->
   </form>
 {% endblock %}
