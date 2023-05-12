@@ -169,33 +169,36 @@ def admin_booking_list(request):
     return render(request, 'booking_list.html', context)
 
 #
-@login_required
-def booking_update(request, pk):
-    booking = get_object_or_404(Booking, pk=pk)
-    if request.method == 'POST':
-        form = BookingForm(request.POST, instance=booking)
-        if form.is_valid():
-            booking = form.save(commit=False)
-            booking.customer = request.user
-            booking.save()
-            messages.success(request, 'Booking updated successfully.')
-            return redirect('booking_list')
-    else:
-        form = BookingForm(instance=booking)
+# @login_required
+# def booking_update(request, pk):
+#     booking = get_object_or_404(Booking, pk=pk)
+#     if request.method == 'POST':
+#         form = BookingForm(request.POST, instance=booking)
+#         if form.is_valid():
+#             booking = form.save(commit=False)
+#             booking.customer = request.user
+#             booking.save()
+#             messages.success(request, 'Booking updated successfully.')
+#             return redirect('booking_list')
+#     else:
+#         form = BookingForm(instance=booking)
     
     
-    return render(request, 'booking_update.html', {'form': form, 'booking': booking})
+#     return render(request, 'booking_update.html', {'form': form, 'booking': booking})
 
+#CUSTOMER: TO VIEW THE DETAILS OF THEIR BOOKINGS
 @login_required
 def booking_detail(request):
     bookings = Booking.objects.filter(user=request.user)
     return render(request, 'booking_detail.html', {'bookings': bookings})
 
-@login_required
-def complaint_list(request, complaint_id):
-    complaint = get_object_or_404(Complaint, pk=complaint_id, customer=request.user)
-    return render(request, 'complaint_list.html', {'complaint': complaint})
+#
+# @login_required
+# def complaint_list(request, complaint_id):
+#     complaint = get_object_or_404(Complaint, pk=complaint_id, customer=request.user)
+#     return render(request, 'complaint_list.html', {'complaint': complaint})
 
+#ADMIN: TO SOLVE COMPLAINT
 @login_required
 def complaint_update(request, pk):
     complaint = get_object_or_404(Complaint, pk=pk)
@@ -219,6 +222,7 @@ def complaint_update(request, pk):
     return render(request, 'complaint_update.html', {'form': form, 'complaint': complaint})
 
 
+#CUSTOMER; ROOM DETAIL
 class RoomDetailView(DetailView):
     model = Room
     template_name = 'room_detail.html'
@@ -227,13 +231,14 @@ class RoomDetailView(DetailView):
 
     def get_success_url(self):
         return reverse('room_detail', kwargs={'pk': self.object.room.pk})
-    
-@login_required
-def admin_home(request):
-    current_bookings = Booking.objects.filter(status='current')
-    past_bookings = Booking.objects.filter(status='past')
-    complaints = Complaint.objects.all()
-    return render(request, 'admin_home.html', {'current_bookings': current_bookings, 'past_bookings': past_bookings, 'complaints': complaints})
+  
+
+# @login_required
+# def admin_home(request):
+#     current_bookings = Booking.objects.filter(status='current')
+#     past_bookings = Booking.objects.filter(status='past')
+#     complaints = Complaint.objects.all()
+#     return render(request, 'admin_home.html', {'current_bookings': current_bookings, 'past_bookings': past_bookings, 'complaints': complaints})
 
 
 def login_view(request):
@@ -264,13 +269,13 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 
-class ComplaintListView(ListView):
-    model = Complaint
-    template_name = 'complaint_list.html'
-    context_object_name = 'complaints'
+# class ComplaintListView(ListView):
+#     model = Complaint
+#     template_name = 'complaint_list.html'
+#     context_object_name = 'complaints'
 
 
-
+# CUSTOMER:TO MAKE A COMPLAINT
 class ComplaintCreateView(CreateView):
     model = Complaint
     form_class = ComplaintForm
@@ -286,8 +291,7 @@ class ComplaintCreateView(CreateView):
         messages.success(self.request, 'Your complaint has been submitted successfully!')
         return response
 
-
-# 
+#CUATOMER; complaint detail
 class ComplaintDetailView(DetailView):
     model = Complaint
     template_name = 'complaint_detail.html'
