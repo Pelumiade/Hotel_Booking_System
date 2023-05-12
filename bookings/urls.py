@@ -21,7 +21,8 @@ urlpatterns = [
     path('customer_info/', views.customer_info, name='customer_info'),
     path('customer_bookings/<int:user_id>/', views.customer_bookings, name='customer_bookings'),
     path('booked_rooms_list/', views.booked_rooms_list, name='booked_rooms_list'),
-     path('admin_complaints/', views.admin_complaint_list, name='admin_complaint_list'),
+    path('admin_complaints/', views.admin_complaint_list, name='admin_complaint_list'),
+    path('admin_room_update/<int:room_id>/', views.admin_room_update, name='admin_room_update'),
 
     # Customer URLs
     path('bookings/<int:id>/create/', views.booking_create, name='booking_create'),
