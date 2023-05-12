@@ -1,8 +1,54 @@
 {% extends 'base.html' %}
+<style>
+  .table {
+  width: 100%;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  border-collapse: collapse;
+  border: 1px solid #dee2e6;
+  }
 
+  .table th,
+  .table td {
+  padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;
+  }
+
+  .table thead th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #dee2e6;
+  }
+
+  .table tbody + tbody {
+  border-top: 2px solid #dee2e6;
+  }
+
+  .table-sm th,
+  .table-sm td {
+  padding: 0.3rem;
+  }
+
+  .table-bordered {
+  border: 1px solid #dee2e6;
+  }
+
+  .table-bordered th,
+  .table-bordered td {
+  border: 1px solid #dee2e6;
+  }
+
+  .table-hover tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.075);
+  }
+
+  .table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.05);
+  }
+</style>
 {% block content %}
+ 
   <h1>Complaint List</h1>
-
   <table class="table">
     <thead>
       <tr>
@@ -27,11 +73,11 @@
         <td>
           <form method="post" action="{% url 'bookings:complaint_change_status' complaint.id %}">
             {% csrf_token %}
-            <select name="status">
+            <select name="status" class="form-control">
               <option value="pending" {% if complaint.status == 'pending' %}selected{% endif %}>Pending</option>
               <option value="solved" {% if complaint.status == 'solved' %}selected{% endif %}>Solved</option>
             </select>
-            <button type="submit">Update</button>
+            <button type="submit" class="btn btn-primary">Update</button>
           </form>
         </td>
       </tr>
@@ -43,3 +89,5 @@
     </tbody>
   </table>
 {% endblock %}
+
+

@@ -25,7 +25,6 @@ class Room(models.Model):
         return self.name
 
 
-
 class Booking(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     admin_user= models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bookings_admin', default=1)
@@ -40,16 +39,12 @@ class Booking(models.Model):
         ('rejected', 'Rejected'),
     ]
     status = models.CharField(max_length=10, choices=status_choices, default='pending')
-
-    
     number_of_guests = models.PositiveIntegerField()
     customer_email = models.EmailField(max_length=255)
+    customer_name =  models.CharField(max_length=100, default='')
 
     def __str__(self):
         return f"{self.room.name} - {self.user.email}"
-
-
-
 
 
 class Complaint(models.Model):

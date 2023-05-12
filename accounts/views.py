@@ -11,15 +11,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse 
 from .forms import CustomerCreationForm
 from accounts.models import CustomUser
+from bookings.forms import CustomerSignUpForm
 
-
-
-
-# @user_passes_test(lambda u: u.is_superuser)
-# @login_required(login_url='/login/')
-
-# def admin_dashboard(request):
-#     return render(request, 'accounts/admin_dashboard.html')
 @login_required(login_url='/login/')
 def admin_dashboard(request):
     if not request.user.is_superuser:
@@ -45,54 +38,21 @@ def login_view(request):
     else:
         return render(request, 'accounts/login.html')
 
-# def logout_view(request):
-#     logout(request)
-#     return redirect('login')
+def signup(request):
+    if request.method == 'POST':
+        form = CustomerCreationForm(request.POST)
+        if form.is_valid():
+            print(form.errors)
 
+            user = form.save(commit=False)
+            user.is_customer = True
+            user.save()
+            form.save_m2m()
+            login(request, user)
+            return redirect('bookings:login')
+    else:
+        form = CustomerSignUpForm()
+    return render(request, 'signup.html', {'form': form})
 
-
-def customer_signup(request):
-   form = CustomerCreationForm()
-   page = "customer_signup"
-   if request.method == 'POST':
-      form = CustomerCreationForm(request.POST)
-      if form.is_valid():
-         my_user = form.save(commit=False)
-         my_user.is_active = True
-         my_user.save()
-         my_user = CustomUser.active_objects.get(email=request.POST.get("email"))
-         login(request, my_user)
-         return HttpResponseRedirect(reverse(""))
-   context = {
-      "form": form,
-      "page": page
-   }
-
-   return render(request, "accounts/customer_login.html", context)
-
-def customer_login(request):
-   email = request.POST.get("email")
-   password = request.POST.get("password")
-   page = "customer_login"
-
-   if request.method == "POST":
-      try:
-         user = CustomUser.active_objects.get(email=email)
-
-      except:
-         messages.error(request, "Email does not exist, you should sign up or try checking your e-mail")
-         return render(request, "accounts/customer_login.html", {"page": page})
-
-      user = authenticate(email=email, password=password)
-
-      if user is not None:
-         login(request, user)
-
-         return HttpResponseRedirect(reverse("garbage:home_page"))
-      messages.error(request, "Invalid login details")
-      return render(request, "accounts/customer_login.html", {"page": page})
-   
-   elif request.method == "GET":
-      return render(request, "accounts/customer_login.html", {"page": page})
 
 

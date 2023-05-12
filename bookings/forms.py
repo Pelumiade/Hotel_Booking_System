@@ -1,14 +1,14 @@
 from django import forms
-from .models import Booking, Complaint,Room
-from django.views.generic import CreateView
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django.urls import reverse_lazy
+from django.views.generic import CreateView
+from .models import Booking, Complaint, Room
 
 class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
-        fields = ['customer_email', 'check_in', 'check_out', 'number_of_guests']
-
-    
+        fields = ['customer_name', 'customer_email', 'check_in', 'check_out', 'number_of_guests']
 
 
 class ComplaintForm(forms.ModelForm):
@@ -23,14 +23,11 @@ class RoomForm(forms.ModelForm):
         fields = ['room_number', 'room_type', 'price']
 
 
-
 class LoginForm(forms.Form):
     username=forms.CharField()
     password=forms.CharField()
 
-from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+
 
 class CustomerSignUpForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -51,8 +48,6 @@ class BookingStatusForm(forms.ModelForm):
         model = Booking
         fields = ['status']
 
-from django import forms
-from .models import Room
 
 class RoomForm(forms.ModelForm):
     class Meta:

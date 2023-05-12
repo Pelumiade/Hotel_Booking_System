@@ -1,61 +1,51 @@
-from django.shortcuts import render, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required 
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponseForbidden
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login
+from django.http import HttpResponseForbidden, HttpResponseBadRequest, HttpResponse
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth import login, get_user_model
 from django.contrib import messages
-from .models import Room, Booking, Complaint
-from .forms import BookingForm, ComplaintForm, BookingStatusForm, RoomForm, ComplaintStatusForm
-from django.views.generic import DetailView, FormView
-from django.urls import reverse
-from django.contrib.auth import get_user_model
 from django.template import RequestContext
-from accounts.forms import CustomerCreationForm
 from django.core.mail import send_mail
-from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.views.generic import DetailView, FormView, ListView, CreateView
+from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
-
-
+from .models import Room, Booking, Complaint
+from accounts.forms import CustomerCreationForm
+from .forms import BookingForm,ComplaintForm,BookingStatusForm,RoomForm,ComplaintStatusForm,CustomerSignUpForm
+import datetime
 User = get_user_model()
 # Create your views here.
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-def home_page(request):
+# HOME PAGE
+def home(request):
     rooms = Room.objects.all()
     context = {'rooms': rooms}
-    return render(request, 'home_page.html', context)
-
-
-=======
->>>>>>> 3a20cca7aad771542694611f128820f86451f648
-=======
->>>>>>> 3a20cca7aad771542694611f128820f86451f648
-@login_required
-def home(request):
-    upcoming_bookings = Booking.objects.filter(user=request.user)
-    context = {
-        'upcoming_bookings': upcoming_bookings,
-    }
-  
-  
     return render(request, 'base.html', context)
 
+
+# TO SHOW LIST OF ROOMS FOR CUSTOMERS
 @login_required
 def room_list(request):
     rooms = Room.objects.all()
-    return render(request, 'room_list.html', {'rooms': rooms})
+    bookings = Booking.objects.filter(status='accepted').values_list('room_id', 'check_in', 'check_out')
+    booked_rooms = set()
+    for booking in bookings:
+        room_id, check_in, check_out = booking
+        booked_rooms.add(room_id)
+        # Remove the room from the set if it's already booked for the requested dates
+        if check_in <= datetime.date.today() <= check_out:
+            booked_rooms.remove(room_id)
+    return render(request, 'room_list.html', {'rooms': rooms, 'booked_rooms': booked_rooms})
+
+
 
 @login_required
 def admin_room_list(request):
     rooms = Room.objects.all()
 
-<<<<<<< HEAD
     if request.method == 'POST':
         if 'create' in request.POST:
             form = RoomForm(request.POST, request.FILES)
@@ -88,7 +78,7 @@ def admin_room_list(request):
 
     return render(request, 'admin_room_list.html', {'rooms': rooms, 'form': form})
 
-
+@login_required
 def booking_create(request, id):
     room = get_object_or_404(Room, id=id)
     if request.method == 'POST':
@@ -105,38 +95,6 @@ def booking_create(request, id):
     else:
         form = BookingForm()
     return render(request, 'book_room.html', {'room': room, 'form': form})
-
-<<<<<<< HEAD
-# @login_required
-# def complaint_create(request, id):
-#     complaint = get_object_or_404(Booking, id=id)
-#     if request.method == 'POST':
-#         form = ComplaintForm(request.POST or None)  # pass booking object as parameter
-#         if form.is_valid():
-#             complaint = form.save(commit=False)
-#             complaint.complaint = complaint  # set the booking object
-#             complaint.user = request.user
-#             complaint.save()
-#             messages.success(request, 'Your complaint has been submitted.')
-#             return redirect('bookings:home')
-#     else:
-#         form = ComplaintForm  # pass booking object as parameter
-#     return render(request, 'complaint_create.html', {'form': form})
-=======
-=======
->>>>>>> 3a20cca7aad771542694611f128820f86451f648
-@login_required
-def booking_create(request, pk):
-    room = get_object_or_404(Room, pk=pk)
-    form = BookingForm(request.POST or None)
-    if form.is_valid():
-        booking = form.save(commit=False)
-        booking.room = room
-        booking.save()
-        return redirect('home')
-    return render(request, 'bookings/booking_create.html', {'form': form, 'room': room})
-
->>>>>>> 3a20cca7aad771542694611f128820f86451f648
 
 @login_required
 def complaint_create(request, id):
@@ -190,24 +148,6 @@ def admin_booking_list(request):
     context = {'bookings': bookings, 'form': form}
     return render(request, 'booking_list.html', context)
 
-
-
-# @login_required
-# def booking_accept(request, pk):
-#     if not request.user.is_superuser:
-#         return("you are not allowed in")
-#     user=User.objects.filter(id=pk).first()
-#     bookings = Booking.objects.filter(admin_user=user)
-#     for booking in bookings:
-#         if booking.status=='pending' or booking.status=='rejected':
-#             booking.status ='accepted' 
-#             booking.save()
-#             break   
-
-#     redirect_url = reverse('bookings:booking_list') 
-#     return HttpResponseRedirect (redirect_url)
-
-
 @login_required
 def booking_update(request, pk):
     booking = get_object_or_404(Booking, pk=pk)
@@ -225,59 +165,16 @@ def booking_update(request, pk):
     
     return render(request, 'booking_update.html', {'form': form, 'booking': booking})
 
-<<<<<<< HEAD
-=======
-def booking_detail(request, booking_id):
-    booking = get_object_or_404(Booking, pk=booking_id, customer=request.user)
-    return render(request, 'booking_detail.html', {'booking': booking})
-<<<<<<< HEAD
->>>>>>> 3a20cca7aad771542694611f128820f86451f648
-
 @login_required
 def booking_detail(request):
     bookings = Booking.objects.filter(user=request.user)
-    print(bookings)
     return render(request, 'booking_detail.html', {'bookings': bookings})
-
-
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 3a20cca7aad771542694611f128820f86451f648
-=======
-
-@login_required
-def booking_cancel(request, pk):
-    booking = get_object_or_404(Booking, pk=pk)
-    booking.delete()
-    messages.success(request, 'Booking cancelled successfully.')
-    return redirect('booking_list')
-
-@login_required
-def complaint_create(request):
-    if request.method == 'POST':
-        form = ComplaintForm(request.POST)
-        if form.is_valid():
-            complaint = form.save(commit=False)
-            complaint.customer = request.user
-            complaint.save()
-            messages.success(request, 'Your complaint has been submitted.')
-            return redirect('complaint_list')
-            #return redirect('customer:complaint_detail', complaint_id=complaint.id)
-    else:
-        form = ComplaintForm()
-    return render(request, 'complaint_create.html', {'form': form})
 
 @login_required
 def complaint_list(request, complaint_id):
     complaint = get_object_or_404(Complaint, pk=complaint_id, customer=request.user)
     return render(request, 'complaint_list.html', {'complaint': complaint})
 
-
-
-
->>>>>>> 3a20cca7aad771542694611f128820f86451f648
 @login_required
 def complaint_update(request, pk):
     complaint = get_object_or_404(Complaint, pk=pk)
@@ -301,9 +198,6 @@ def complaint_update(request, pk):
     return render(request, 'complaint_update.html', {'form': form, 'complaint': complaint})
 
 
-
-
-
 class RoomDetailView(DetailView):
     model = Room
     template_name = 'room_detail.html'
@@ -313,14 +207,13 @@ class RoomDetailView(DetailView):
     def get_success_url(self):
         return reverse('room_detail', kwargs={'pk': self.object.room.pk})
     
-
-
 @login_required
 def admin_home(request):
     current_bookings = Booking.objects.filter(status='current')
     past_bookings = Booking.objects.filter(status='past')
     complaints = Complaint.objects.all()
     return render(request, 'admin_home.html', {'current_bookings': current_bookings, 'past_bookings': past_bookings, 'complaints': complaints})
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -332,16 +225,6 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
-
-from django.shortcuts import render, redirect
-from django.contrib.auth import login
-#from django.contrib.auth.forms import UserCreationForm
-from .forms import CustomerSignUpForm
-
-
-
-
-User = get_user_model()
 
 def signup(request):
     if request.method == 'POST':
@@ -360,16 +243,13 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 
-from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView
-from .models import Complaint
-
 class ComplaintListView(ListView):
     model = Complaint
     template_name = 'complaint_list.html'
     context_object_name = 'complaints'
 
-from django.contrib import messages
+
+
 class ComplaintCreateView(CreateView):
     model = Complaint
     form_class = ComplaintForm
@@ -385,16 +265,18 @@ class ComplaintCreateView(CreateView):
         messages.success(self.request, 'Your complaint has been submitted successfully!')
         return response
 
-from django.views.generic import DetailView
-from .models import Complaint
 
+# 
 class ComplaintDetailView(DetailView):
     model = Complaint
     template_name = 'complaint_detail.html'
 
+
+@login_required
 class ComplaintStatusView(FormView):
     form_class = ComplaintStatusForm
     template_name = 'complaint_status.html'
+
 
     def form_valid(self, form):
         complaint = get_object_or_404(Complaint, pk=self.kwargs['pk'])
@@ -402,13 +284,11 @@ class ComplaintStatusView(FormView):
         complaint.save()
         return redirect('complaint_detail', pk=complaint.pk)
 
-
 @login_required
 def complaint_detail(request):    
     complaint = Complaint.objects.filter(user=request.user)
     print(complaint)
     return render(request, 'complaint_detail.html', {'complaint': complaint})
-
 
 @login_required
 def admin_complaint_list(request):
@@ -453,10 +333,12 @@ def complaint_edit(request, complaint_id):
 
     return render(request, 'complaint_update.html', {'form': form, 'complaint': complaint})
 
-from django.shortcuts import render
-from django.utils import timezone
-from .models import Booking
+@login_required
+def customer_info(request):
+    bookings = Booking.objects.all()
+    return render(request, 'customer_info.html', {'bookings': bookings})
 
+@login_required
 def booked_rooms_list(request):
     current_bookings = Booking.objects.filter(check_out__gte=timezone.now())
     past_bookings = Booking.objects.filter(check_out__lt=timezone.now())
@@ -468,10 +350,16 @@ def booked_rooms_list(request):
 
     return render(request, 'booked_rooms_list.html', context)
 
-# views.py
-from django.shortcuts import render
-from .models import Booking
+@login_required
+def release_room(request, booking_id):
+    booking = Booking.objects.get(id=booking_id)
+    booking.room.available = True
+    booking.room.save()
+    booking.delete()
+    return HttpResponseRedirect(reverse('bookings:booked_rooms_list'))
 
-def customer_info(request):
-    bookings = Booking.objects.all()
-    return render(request, 'customer_info.html', {'bookings': bookings})
+@login_required
+def customer_bookings(request, user_id):
+    bookings = Booking.objects.filter(user__id=user_id)
+    return render(request, 'customer_bookings.html', {'bookings': bookings})
+
