@@ -40,8 +40,7 @@ def room_list(request):
             booked_rooms.remove(room_id)
     return render(request, 'room_list.html', {'rooms': rooms, 'booked_rooms': booked_rooms})
 
-
-
+# ADMIN: DELETE & CREATE ROOMS
 @login_required
 def admin_room_list(request):
     rooms = Room.objects.all()
@@ -78,6 +77,7 @@ def admin_room_list(request):
 
     return render(request, 'admin_room_list.html', {'rooms': rooms, 'form': form})
 
+#CUSTOMERS: TO BOOK ROOMS
 @login_required
 def booking_create(request, id):
     room = get_object_or_404(Room, id=id)
@@ -96,6 +96,7 @@ def booking_create(request, id):
         form = BookingForm()
     return render(request, 'book_room.html', {'room': room, 'form': form})
 
+#CUSTOMER: TO MAKE A COMPLAINT
 @login_required
 def complaint_create(request, id):
     booking = get_object_or_404(Booking, pk=id)
@@ -112,6 +113,7 @@ def complaint_create(request, id):
         form = ComplaintForm(pk=id)  # pass booking object as parameter
     return render(request, 'complaint_create.html', {'form': form})
 
+#ADMIN:TO ACCEPT OR REJECT BOOKINGS 
 @login_required
 def admin_booking_list(request):
     bookings = Booking.objects.all()
@@ -147,6 +149,7 @@ def admin_booking_list(request):
 
     context = {'bookings': bookings, 'form': form}
     return render(request, 'booking_list.html', context)
+
 
 @login_required
 def booking_update(request, pk):
