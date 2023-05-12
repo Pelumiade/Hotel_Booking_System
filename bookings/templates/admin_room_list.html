@@ -10,7 +10,7 @@
           <th>#</th>
           <th>Name</th>
           <th>Type</th>
-          <th>Number</th>
+
           <th>Description</th>
           <th>Price</th>
           <th>Image</th>
@@ -23,9 +23,9 @@
             <td>{{ room.id }}</td>
             <td>{{ room.name }}</td>
             <td>{{ room.room_type }}</td>
-            <td>{{ room.room_number }}</td>
+           
             <td>{{ room.description }}</td>
-            <td>{{ room.price }}</td>
+            <td>${{ room.price }}</td>
             <td>
               {% if room.image %}
                 <img src="{{ room.image.url }}" alt="{{ room.name }}" width="50">
@@ -36,8 +36,15 @@
                 {% csrf_token %}
                 <input type="hidden" name="room_id" value="{{ room.id }}">
                 <button type="submit" name="delete" class="btn btn-danger btn-sm">Delete</button>
-                <button type="submit" name="update" class="btn btn-primary btn-sm">Update</button>
+                
               </form>
+            <td>
+              <form method="POST" action="">
+                {% csrf_token %}
+                <!-- <input type="hidden" name="room_id" value="{{ room.id }}">
+                <button type="submit" name="update" class="btn btn-primary btn-sm">Update</button> -->
+                <a href="{% url 'bookings:admin_room_update' room.id %}">Update</a>
+
             </td>
           </tr>
         {% endfor %}
