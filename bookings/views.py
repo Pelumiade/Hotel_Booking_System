@@ -77,6 +77,24 @@ def admin_room_list(request):
 
     return render(request, 'admin_room_list.html', {'rooms': rooms, 'form': form})
 
+#ADMIN: ROOM UPDATE
+@login_required
+def admin_room_update(request, room_id):
+    room = get_object_or_404(Room, pk=room_id)
+
+    if request.method == 'POST':
+        form = RoomForm(request.POST, request.FILES, instance=room)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Room updated successfully.')
+            return redirect('bookings:admin_room_list')
+        else:
+            messages.error(request, 'Error updating room.')
+    else:
+        form = RoomForm(instance=room)
+
+    return render(request, 'admin_room_update.html', {'form': form, 'room': room})
+
 #CUSTOMERS: TO BOOK ROOMS
 @login_required
 def booking_create(request, id):
@@ -150,7 +168,7 @@ def admin_booking_list(request):
     context = {'bookings': bookings, 'form': form}
     return render(request, 'booking_list.html', context)
 
-
+#
 @login_required
 def booking_update(request, pk):
     booking = get_object_or_404(Booking, pk=pk)
